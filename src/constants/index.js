@@ -8,6 +8,7 @@ import port07 from "../assets/img/port07.jpg";
 import port08 from "../assets/img/port08.jpg";
 import port09 from "../assets/img/port09.jpg";
 import port10 from "../assets/img/port10.jpg";
+import aboutme from "../assets/img/aboutme.jpg";
 
 export const headerNav = [
     { title: "intro", url: "#intro" },
@@ -19,7 +20,8 @@ export const headerNav = [
 
 export const introText = {
     title: "port developer",
-    desc: ["talent is", "found at the end of the", "effort"]
+    desc: ["talent is", "found at the end of the", "effort"],
+    aboutme: aboutme
 }
 
 export const skillText = [

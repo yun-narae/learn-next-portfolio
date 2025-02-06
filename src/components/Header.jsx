@@ -1,90 +1,31 @@
-import React, { useState, useRef, useEffect } from "react";
-import { headerNav } from "../constants";
+import { useState, useEffect, useRef } from 'react';
 
 const Header = () => {
-  const [isActive, setIsActive] = useState(false); // 햄버거 메뉴 열림/닫힘 상태
+  const [isSmallViewport, setIsSmallViewport] = useState(false);
   const btnRef = useRef(null); // 햄버거 버튼 참조
   const navItemRefs = useRef([]); // nav 리스트 항목들 참조
-  const [isSmallViewport, setIsSmallViewport] = useState(window.innerWidth <= 1020); // 1020px 뷰포트 너비 확인용 상태
 
   // 뷰포트 크기 변경 감지
   useEffect(() => {
-    const handleResize = () => {
-      setIsSmallViewport(window.innerWidth <= 1020);
-    };
+    // 클라이언트에서만 window를 사용할 수 있도록 조건 추가
+    if (typeof window !== 'undefined') {
+      const handleResize = () => {
+        setIsSmallViewport(window.innerWidth <= 1020);
+      };
 
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+      // 컴포넌트 마운트 시 초기 상태 설정
+      handleResize();
 
-  const toggleMenu = () => {
-    setIsActive(!isActive);
-  };
-
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      toggleMenu();
+      window.addEventListener("resize", handleResize);
+      
+      // 컴포넌트 언마운트 시 이벤트 리스너 정리
+      return () => window.removeEventListener("resize", handleResize);
     }
-  };
-
-  // 메뉴 열림/닫힘 시 포커스 이동
-  useEffect(() => {
-    if (isActive) {
-      // 메뉴가 열렸을 때 nav의 첫 번째 항목으로 포커스 이동
-      navItemRefs.current[0]?.focus();
-    } else if (!isActive && btnRef.current) {
-      // 메뉴가 닫히면 햄버거 버튼으로 포커스 이동
-      btnRef.current.focus();
-    }
-  }, [isActive]);
+  }, []); // 빈 배열로, 컴포넌트가 마운트 될 때만 실행
 
   return (
-    <header id="header" role="banner">
-      <div className="header__inner">
-        {/* 로고 */}
-        <h1 className="header__logo">
-          <a href="/" tabIndex="0">
-            portfolio<em>Next.js</em>
-          </a>
-        </h1>
-
-        {/* 네비게이션 */}
-        <nav
-          className={`header__nav ${isActive ? "active" : ""}`}
-          role="navigation"
-          aria-label="메인 메뉴"
-        >
-          <ul className="menu">
-            {headerNav.map((nav, key) => (
-              <li className="menu__list" key={key}>
-                <a
-                  className="menu__list__link"
-                  href={nav.url}
-                  tabIndex={isSmallViewport && !isActive ? "-1" : "0"} // 뷰포트가 작고 메뉴가 닫힌 경우 포커스 제외
-                  ref={(el) => (navItemRefs.current[key] = el)} // 각 항목 참조 저장
-                >
-                  {nav.title}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        {/* 햄버거 버튼 */}
-        <div
-          className="btn-box"
-          id="headerToggle"
-          role="button"
-          tabIndex="0"
-          aria-expanded={isActive ? "true" : "false"}
-          aria-controls="primary-menu"
-          onClick={toggleMenu}
-          onKeyDown={handleKeyDown}
-          ref={btnRef} // 햄버거 버튼 참조
-        >
-          <span>{isActive ? "햄" : "버거"}</span>
-        </div>
-      </div>
+    <header>
+      {/* 헤더 내용 */}
     </header>
   );
 };

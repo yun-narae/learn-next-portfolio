@@ -58,8 +58,6 @@ const Port = () => {
                                 <Image 
                                   src={port.img}
                                   alt={port.name}
-                                  width={420}
-                                  height={262}
                                 />
                             </a>
                             <h3 className="title">{port.title}</h3>

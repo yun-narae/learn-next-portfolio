@@ -5,25 +5,25 @@ const Header = () => {
   const [isActive, setIsActive] = useState(false); // 햄버거 메뉴 열림/닫힘 상태
   const btnRef = useRef(null); // 햄버거 버튼 참조
   const navItemRefs = useRef([]); // nav 리스트 항목들 참조
-  const [isSmallViewport, setIsSmallViewport] = useState(window.innerWidth <= 1020); // 1020px 뷰포트 너비 확인용 상태
+  const [isSmallViewport, setIsSmallViewport] = useState(null); // 초기값을 null로 설정
 
-  // 뷰포트 크기 변경 감지
+  // 클라이언트 사이드에서만 실행되도록 useEffect에서 처리
   useEffect(() => {
-    // Check for window availability to avoid SSR issues
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       const handleResize = () => {
-        setIsSmallViewport(window.innerWidth <= 1020);
+        setIsSmallViewport(window.innerWidth <= 1020); // 화면 너비에 따라 상태 업데이트
       };
 
-      // Set initial state based on the current viewport size
+      // 초기 상태 설정
       handleResize();
 
+      // 리사이즈 이벤트 리스너 등록
       window.addEventListener("resize", handleResize);
-      
-      // Cleanup listener on component unmount
+
+      // 컴포넌트 언마운트 시 리스너 제거
       return () => window.removeEventListener("resize", handleResize);
     }
-  }, []);
+  }, []); // 빈 배열로 첫 렌더링 시 한 번만 실행
 
   const toggleMenu = () => {
     setIsActive(!isActive);
@@ -45,6 +45,11 @@ const Header = () => {
       btnRef.current.focus();
     }
   }, [isActive]);
+
+  // isSmallViewport 상태가 null이면 아직 클라이언트 사이드에서 값이 설정되지 않은 상태이므로 렌더링하지 않음
+  if (isSmallViewport === null) {
+    return null;
+  }
 
   return (
     <header id="header" role="banner">
